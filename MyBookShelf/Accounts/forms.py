@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import User
+from django.contrib.auth.models import User
 
 def email_validator_signup(email_form):
     user = User.objects.filter(email=email_form)
@@ -17,6 +17,14 @@ class SignUpForm(forms.Form):
 
     Password = forms.CharField(widget=forms.PasswordInput(),min_length=5,max_length=15)
     PasswordConfirm = forms.CharField(widget=forms.PasswordInput(),min_length=5,max_length=15)
+
+    def clean(self):
+        super(SignUpForm,self).clean()
+
+        pwd = self.cleaned_data.get('Password','')
+        pwdcnf = self.cleaned_data.get('PasswordConfirm','')
+        if pwd != pwdcnf:
+            raise ValidationError('Passwords do not match!')
 
 
 
