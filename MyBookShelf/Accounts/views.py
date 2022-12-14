@@ -13,6 +13,9 @@ def home(req):
 
 
 def register(req):
+    if req.user.is_authenticated:
+        return redirect(reverse('account_home'))
+
     if req.method=="POST":
         form = SignUpForm(req.POST)
 
@@ -39,6 +42,9 @@ def register(req):
 
 
 def login(req):
+    if req.user.is_authenticated:
+        return redirect(reverse('account_home'))
+
     if req.method=="POST":
         form = LoginForm(req.POST)
         if form.is_valid():
