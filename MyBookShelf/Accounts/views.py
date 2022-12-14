@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 
+@login_required
 def home(req):
     return render(req,'accounts/home.html')
 
@@ -55,15 +56,21 @@ def login(req):
             if user:
                 auth.login(req,user)
                 messages.success(req,'Login Successful')
-
+                if form.cleaned_data.get('nxt'):
+                    return redirect(form.cleaned_data.nxt)
                 return redirect(reverse('account_home'))
             else:
                 messages.warning(req,'Login failed!')
 
     else:
+        nxt = req.GET.get('next','')
+        context = {}
+        
+        
+        context['nxt'] = nxt
         form = LoginForm()
-    
-    return render(req,'accounts/login.html',{'form':form})
+        context['form'] = form
+    return render(req,'accounts/login.html',context)
 
 
 @login_required

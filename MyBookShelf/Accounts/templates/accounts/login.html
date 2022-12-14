@@ -5,7 +5,12 @@
     <form action="" method="POST">
         {% csrf_token %}
         {{ form.as_p }}
+
+        
+        <input type="hidden" name="next" value="{{ nxt }}">
         <input type="submit" value="Submit">
     </form>
+
+    No existing account? <a href="{% url 'account_register' %}">Register</a>
 
 {% endblock content %}
