@@ -5,6 +5,7 @@ from django.contrib.auth.hashers import make_password,check_password
 from .forms import SignUpForm,LoginForm
 from django.contrib.auth.models import User
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 
 def home(req):
     return render(req,'accounts/home.html')
@@ -59,7 +60,8 @@ def login(req):
     return render(req,'accounts/login.html',{'form':form})
 
 
-
+@login_required
 def logout(req):
-    return render(req,"accounts/logout.html")
+    auth.logout(req)
+    return redirect(reverse('account_login'))
 
