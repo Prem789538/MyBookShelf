@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
 from django.urls import reverse
+from django.contrib import messages
 from .forms import SignUpForm
 from .models import User
 def home(req):
@@ -20,14 +21,16 @@ def register(req):
 
             user = User.objects.create(full_name=firstname+" "+lastname,email=email,password=passwd)
             user.save()
-            return redirect(reverse('account login'))
-        else:
-            return render(req,'accounts/register.html',{'form':form})
+            username = User.objects.filter(email=email).first().full_name
+            messages.success(req,f'Account created for {username}')
+            return redirect(reverse('account_login'))
+        
 
 
     else:
         form = SignUpForm()
-        return render(req,'accounts/register.html',{"form":form})
+    
+    return render(req,'accounts/register.html',{"form":form})
 
 
 def login(req):
